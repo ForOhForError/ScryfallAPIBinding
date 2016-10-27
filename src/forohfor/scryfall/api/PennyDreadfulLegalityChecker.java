@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
+import java.util.TreeSet;
 
 /**
  * Utility class for determining the legality of cards in
@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 
 public class PennyDreadfulLegalityChecker {
-	private static ArrayList<String> legalCards = null;
+	private static TreeSet<String> legalCards = null;
 	private static final String LIST_URI = "http://pdmtgo.com/legal_cards.txt";
 
 	/**
@@ -23,7 +23,7 @@ public class PennyDreadfulLegalityChecker {
 	private static void init()
 	{
 		try{
-			legalCards = new ArrayList<String>();
+			legalCards = new TreeSet<String>();
 			URL url = new URL(LIST_URI);
 			URLConnection conn = url.openConnection();
 			BufferedReader in = new BufferedReader(new InputStreamReader(
