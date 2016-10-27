@@ -21,6 +21,7 @@ public class MTGCardQuery {
 
 	private static final String API_URI = "https://api.scryfall.com";
 	private static JSONParser JSON_PARSER = new JSONParser();
+	private static boolean enablePennyDreadfulLegality = false;
 
 	/**
 	 * Returns a list of card objects that match the query. 
@@ -54,14 +55,22 @@ public class MTGCardQuery {
 		URL url = new URL(escapedQuery);
 		URLConnection conn = url.openConnection();
 		BufferedReader in = new BufferedReader(new InputStreamReader(
-			    conn.getInputStream(), "UTF-8"));
+				conn.getInputStream(), "UTF-8"));
+
+		String json = "";
+		String line = "";
+		while(line != null)
+		{
+			json+=line;
+			line = in.readLine();
+		}
 
 		JSONObject root = null;
 		try {
-			root = (JSONObject)MTGCardQuery.JSON_PARSER.parse(in);
+			root = (JSONObject)MTGCardQuery.JSON_PARSER.parse(json);
 		} catch (ParseException e) {
 		}
-		
+
 		in.close();
 
 		return new Card(root);
@@ -78,11 +87,11 @@ public class MTGCardQuery {
 		try{
 			URL url = new URL(uri);
 			URLConnection conn = url.openConnection();
-			
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-				    conn.getInputStream(), "UTF-8"));
 
-			
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					conn.getInputStream(), "UTF-8"));
+
+
 			String json = "";
 			String line = "";
 			while(line != null)
@@ -90,13 +99,13 @@ public class MTGCardQuery {
 				json+=line;
 				line = in.readLine();
 			}
-			
+
 			JSONObject root = null;
 			try {
 				root = (JSONObject)MTGCardQuery.JSON_PARSER.parse(json);
 			} catch (ParseException e) {
 			}
-			
+
 			in.close();
 
 			JSONArray jsonCards = (JSONArray)root.get("data");
@@ -120,5 +129,36 @@ public class MTGCardQuery {
 		}
 
 		return cards;
+	}
+
+	/**
+	 * Enables checking cards for legality in penny dreadful. Will
+	 * slightly drop performance, so this is optional. Disabled by
+	 * default.
+	 */
+	public static void enablePennyDreadfulLegality()
+	{
+		enablePennyDreadfulLegality = true;
+	}
+
+	/**
+	 * Disables checking cards for legality in penny dreadful. Enabling
+	 * this feature will slightly drop performance, so this is optional. 
+	 * Disabled by default.
+	 */
+	public static void disablePennyDreadfulLegality()
+	{
+		enablePennyDreadfulLegality = false;
+	}
+
+	/**
+	 * Returns true if checking cards for legality in penny dreadful is
+	 * currently enabled. Enabling this feature will slightly drop 
+	 * performance, so this is optional. 
+	 * Disabled by default.
+	 */
+	public static boolean doPennyDreadful()
+	{
+		return enablePennyDreadfulLegality;
 	}
 }

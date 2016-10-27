@@ -39,8 +39,8 @@ public class Card {
 	private boolean timeShifted;
 	private boolean colorShifted;
 	private boolean futureShifted;
-	private String priceUsd;
-	private String priceTix;
+	private Double priceUsd;
+	private Double priceTix;
 	private String scryfallUri;
 	private String imageURI;
 
@@ -73,8 +73,26 @@ public class Card {
 		timeShifted = JSONUtil.getBoolData(cardData, "timeshifted").booleanValue();
 		colorShifted = JSONUtil.getBoolData(cardData, "colorshifted").booleanValue();
 		futureShifted = JSONUtil.getBoolData(cardData, "futureshifted").booleanValue();
-		priceUsd = JSONUtil.getStringData(cardData,"usd");
-		priceTix = JSONUtil.getStringData(cardData,"tix");
+		String priceUsdTmp = JSONUtil.getStringData(cardData,"usd");
+		String priceTixTmp = JSONUtil.getStringData(cardData,"tix");
+		if(priceUsdTmp==null)
+		{
+			priceUsd = null;
+		}
+		else
+		{
+			priceUsd = Double.parseDouble(priceUsdTmp);
+		}
+		
+		if(priceTixTmp==null)
+		{
+			priceTix = null;
+		}
+		else
+		{
+			priceTix = Double.parseDouble(priceTixTmp);
+		}
+		
 		scryfallUri = JSONUtil.getStringData(cardData,"uri");
 		imageURI = JSONUtil.getStringData(cardData,"image_uri");
 		legalities = JSONUtil.getStringMap(cardData,"legalities");
@@ -83,6 +101,13 @@ public class Card {
 		{
 			multiPart = true;
 			allParts = getAllParts(cardData,"all_parts");
+		}
+		
+		if(MTGCardQuery.doPennyDreadful())
+		{
+			legalities.put("penny dreadful", 
+					PennyDreadfulLegalityChecker.getLegality(name)
+					);
 		}
 	}
 
@@ -122,6 +147,16 @@ public class Card {
 	 */
 	public String getLegality(String format) {
 		return legalities.get(format.toLowerCase());
+	}
+	
+	/**
+	 * Returns true if the card is strictly legal in the given format, and
+	 * false otherwise. NOTE: cards that are restricted in the format
+	 * will return false.
+	 * @param format the format to check. Case insensitive.
+	 */
+	public boolean isLegal(String format) {
+		return "legal".equals(legalities.get(format.toLowerCase()));
 	}
 
 	/**
@@ -307,14 +342,14 @@ public class Card {
 	/**
 	 * Returns this printing's price in USD. Formatted as a String "Dollars.Cents".
 	 */
-	public String getPriceUsd() {
+	public Double getPriceUsd() {
 		return priceUsd;
 	}
 
 	/**
 	 * Returns this printing's price in MTGO tickets. Formatted as a String "Tickets.Hundreths".
 	 */
-	public String getPriceTix() {
+	public Double getPriceTix() {
 		return priceTix;
 	}
 
