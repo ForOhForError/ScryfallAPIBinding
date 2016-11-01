@@ -21,7 +21,7 @@ import forohfor.scryfall.api.MTGCardQuery;
  * @author ForOhForError
  */
 
-public class Example {
+public class SearchExample {
 	public static void main(String[] args) throws Exception {
 		Scanner scan = new Scanner(System.in);
 		String query = " ";
@@ -29,6 +29,14 @@ public class Example {
 			System.out.print("Enter card search: ");
 			query = scan.nextLine();
 			ArrayList<Card> cards = MTGCardQuery.search(query);
+			
+			System.out.println("The resulting cards: ");
+			
+			for(Card card:cards)
+			{
+				System.out.println(card);
+			}
+			
 			if (cards.size() == 1) {
 				Card c = cards.get(0);
 				URL url = new URL(c.getImageURI());

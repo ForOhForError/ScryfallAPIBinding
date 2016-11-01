@@ -6,6 +6,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,6 +24,32 @@ public class MTGCardQuery {
 	private static JSONParser JSON_PARSER = new JSONParser();
 	private static boolean enablePennyDreadfulLegality = false;
 
+	/**
+	 * Returns a list of card objects containing all cards matching any
+	 * of the card names passed as an argument. Works in as few API calls
+	 * as possible.
+	 * @param cardnames The collection of cardnames to get a list of objects from
+	 * @param listDuplicates If true, the returned list will contain all
+	 * editions of any card in the input collection.
+	 * @return A list of card objects that match the query. 
+	 */
+	public static ArrayList<Card> toCardList(Collection<String> cardnames, boolean listDuplicates)
+	{
+		StringBuilder query = new StringBuilder("");
+		
+		if(listDuplicates)
+		{
+			query.append("++");
+		}
+		for(String cardname:cardnames)
+		{
+			query.append("!\""+cardname+"\" "+" or ");
+		}
+		query.append("!\" \"");
+		
+		return search(query.toString());
+	}
+	
 	/**
 	 * Returns a list of card objects that match the query. 
 	 * The query should be formatted using scryfall's syntax:
