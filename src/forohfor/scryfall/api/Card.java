@@ -119,12 +119,6 @@ public class Card {
 			allParts = getAllParts(cardData,"all_parts");
 		}
 
-		if(MTGCardQuery.doPennyDreadful())
-		{
-			legalities.put("penny dreadful", 
-					PennyDreadfulLegalityChecker.getLegality(name)
-					);
-		}
 	}
 
 	/**

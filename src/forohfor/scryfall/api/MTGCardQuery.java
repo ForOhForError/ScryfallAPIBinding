@@ -22,7 +22,6 @@ public class MTGCardQuery {
 
 	private static final String API_URI = "https://api.scryfall.com";
 	private static JSONParser JSON_PARSER = new JSONParser();
-	private static boolean enablePennyDreadfulLegality = false;
 
 	/**
 	 * Returns a list of card objects containing all cards matching any
@@ -156,36 +155,5 @@ public class MTGCardQuery {
 		}
 
 		return cards;
-	}
-
-	/**
-	 * Enables checking cards for legality in penny dreadful. Will
-	 * slightly drop performance, so this is optional. Disabled by
-	 * default.
-	 */
-	public static void enablePennyDreadfulLegality()
-	{
-		enablePennyDreadfulLegality = true;
-	}
-
-	/**
-	 * Disables checking cards for legality in penny dreadful. Enabling
-	 * this feature will slightly drop performance, so this is optional. 
-	 * Disabled by default.
-	 */
-	public static void disablePennyDreadfulLegality()
-	{
-		enablePennyDreadfulLegality = false;
-	}
-
-	/**
-	 * Returns true if checking cards for legality in penny dreadful is
-	 * currently enabled. Enabling this feature will slightly drop 
-	 * performance, so this is optional. 
-	 * Disabled by default.
-	 */
-	public static boolean doPennyDreadful()
-	{
-		return enablePennyDreadfulLegality;
 	}
 }
