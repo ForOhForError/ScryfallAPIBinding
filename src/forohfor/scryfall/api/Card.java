@@ -43,6 +43,8 @@ public class Card {
 	private Double priceTix;
 	private String scryfallUri;
 	private String imageURI;
+	private String power;
+	private String toughness;
 
 	/**
 	 * Constructs a Card object from a JSON object
@@ -73,6 +75,8 @@ public class Card {
 		timeShifted = JSONUtil.getBoolData(cardData, "timeshifted").booleanValue();
 		colorShifted = JSONUtil.getBoolData(cardData, "colorshifted").booleanValue();
 		futureShifted = JSONUtil.getBoolData(cardData, "futureshifted").booleanValue();
+		power = JSONUtil.getStringData(cardData,"power");
+		toughness = JSONUtil.getStringData(cardData,"toughness");
 		String priceUsdTmp = JSONUtil.getStringData(cardData,"usd");
 		String priceTixTmp = JSONUtil.getStringData(cardData,"tix");
 		if(priceUsdTmp==null)
@@ -417,6 +421,34 @@ public class Card {
 		} else if (!setCode.equals(other.setCode))
 			return false;
 		return true;
+	}
+
+	/**
+	 * @return the legalities
+	 */
+	public HashMap<String, String> getLegalities() {
+		return legalities;
+	}
+
+	/**
+	 * @return the allParts
+	 */
+	public ArrayList<CardReference> getAllParts() {
+		return allParts;
+	}
+
+	/**
+	 * @return the power
+	 */
+	public String getPower() {
+		return power;
+	}
+
+	/**
+	 * @return the toughness
+	 */
+	public String getToughness() {
+		return toughness;
 	}
 
 

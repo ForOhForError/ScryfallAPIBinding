@@ -50,6 +50,49 @@ public class MTGCardQuery {
 	}
 	
 	/**
+	 * @return A list of all sets in magic's history.
+	 */
+	public static ArrayList<Set> getSets()
+	{
+		ArrayList<Set> s = new ArrayList<>();
+		try{
+			URL url = new URL("https://api.scryfall.com/sets");
+			URLConnection conn = url.openConnection();
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					conn.getInputStream(), "UTF-8"));
+
+
+			String json = "";
+			String line = "";
+			while(line != null)
+			{
+				json+=line;
+				line = in.readLine();
+			}
+
+			JSONObject root = null;
+			try {
+				root = (JSONObject)MTGCardQuery.JSON_PARSER.parse(json);
+			} catch (ParseException e) {
+			}
+
+			in.close();
+
+			JSONArray sets = (JSONArray)root.get("data");
+
+			for (int i = 0; i < sets.size(); i++)
+			{
+				JSONObject setData = ((JSONObject)sets.get(i));
+				s.add(new Set(setData));
+			}
+		}catch(IOException e){
+
+		}
+		return s;
+	}
+	
+	/**
 	 * Returns a list of card objects that match the query. 
 	 * The query should be formatted using scryfall's syntax:
 	 * https://www.scryfall.com/docs/syntax
