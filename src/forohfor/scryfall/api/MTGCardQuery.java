@@ -111,6 +111,37 @@ public class MTGCardQuery {
 	}
 
 	/**
+	 * Returns a single card object representing the card with the given ID
+	 * @param id The URI to pull data fromScryfall ID of the card
+	 * @return A single card object representing the card with the given ID
+	 */
+	public static Card getCardByScryfallId(String id) throws IOException
+	{
+		URL url = new URL("https://api.scryfall.com/cards/"+id);
+		URLConnection conn = url.openConnection();
+		BufferedReader in = new BufferedReader(new InputStreamReader(
+				conn.getInputStream(), "UTF-8"));
+
+		String json = "";
+		String line = "";
+		while(line != null)
+		{
+			json+=line;
+			line = in.readLine();
+		}
+
+		JSONObject root = null;
+		try {
+			root = (JSONObject)MTGCardQuery.JSON_PARSER.parse(json);
+		} catch (ParseException e) {
+		}
+
+		in.close();
+
+		return new Card(root);
+	}
+	
+	/**
 	 * Returns a single card object from the given URI
 	 * @param uri The URI to pull data from
 	 * @return A single card object from the uri
