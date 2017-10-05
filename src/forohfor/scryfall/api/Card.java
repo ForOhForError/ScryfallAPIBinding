@@ -1,6 +1,11 @@
 package forohfor.scryfall.api;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.imageio.ImageIO;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,30 +26,34 @@ public class Card {
 	private String[] colorIdentity;
 	private String layout;
 	private HashMap<String, String> legalities;
-	private boolean reserved;
+	private Boolean reserved;
 	private String scryfallUUID;
 	private Integer multiverseID;
 	private Integer mtgoID;
 	private String setCode;
 	private String setName;
 	private String collectorNumber;
-	private boolean multiPart;
+	private Boolean multiPart;
 	private ArrayList<CardReference> allParts;
 	private String rarity;
-	private boolean digitalOnly;
+	private Boolean digitalOnly;
 	private String flavorText;
 	private String artist;
 	private String frame;
 	private String border;
-	private boolean timeShifted;
-	private boolean colorShifted;
-	private boolean futureShifted;
+	private Boolean timeShifted;
+	private Boolean colorShifted;
+	private Boolean futureShifted;
 	private Double priceUsd;
 	private Double priceTix;
 	private String scryfallUri;
 	private String imageURI;
 	private String power;
 	private String toughness;
+	private String loyalty;
+	private HashMap<String, String> imageURIs;
+	private ArrayList<CardFace> cardFaces;
+	private boolean multifaced = false;
 
 	/**
 	 * Constructs a Card object from a JSON object
@@ -77,6 +86,7 @@ public class Card {
 		futureShifted = JSONUtil.getBoolData(cardData, "futureshifted").booleanValue();
 		power = JSONUtil.getStringData(cardData,"power");
 		toughness = JSONUtil.getStringData(cardData,"toughness");
+		loyalty = JSONUtil.getStringData(cardData,"loyalty");
 		String priceUsdTmp = JSONUtil.getStringData(cardData,"usd");
 		String priceTixTmp = JSONUtil.getStringData(cardData,"tix");
 		if(priceUsdTmp==null)
@@ -116,15 +126,57 @@ public class Card {
 		scryfallUri = JSONUtil.getStringData(cardData,"uri");
 		imageURI = JSONUtil.getStringData(cardData,"image_uri");
 		legalities = JSONUtil.getStringMap(cardData,"legalities");
+		imageURIs = JSONUtil.getStringMap(cardData,"image_uris");
 
 		if(cardData.containsKey("all_parts"))
 		{
 			multiPart = true;
 			allParts = getAllParts(cardData,"all_parts");
 		}
+		
+		if(cardData.containsKey("card_faces"))
+		{
+			cardFaces = getAllFaces(cardData,"card_faces");
+			multifaced = true;
+		}
 
 	}
 
+	/**
+	 * @return The preferred image for this card
+	 */
+	public BufferedImage getCannonicalImage()
+	{
+		try
+		{
+			return ImageIO.read(new URL(getCannonicalImageURI()));
+		}
+		catch(IOException e)
+		{
+			return null;
+		}
+	}
+	
+	/**
+	 * @return The uri for the preferred image for this card
+	 */
+	public String getCannonicalImageURI()
+	{
+		if(multifaced)
+		{
+			return cardFaces.get(0).getImageURI("png");
+		}
+		return getImageURI("png");
+	}
+	
+	/**
+	 * Returns all faces of this card, if multifaced, and null otherwise.
+	 */
+	public ArrayList<CardFace> getFaces()
+	{
+		return cardFaces;
+	}
+	
 	/**
 	 * Utility method for reading each part of multipart cards.
 	 */
@@ -145,6 +197,27 @@ public class Card {
 		}
 		return refs;
 	}
+	
+	/**
+	 * Utility method for reading each part of multifaced cards.
+	 */
+	private static ArrayList<CardFace> getAllFaces(JSONObject data, String key)
+	{
+		Object obj = data.get(key);
+		if(obj==null){
+			return null;
+		}
+
+		ArrayList<CardFace> refs = new ArrayList<CardFace>();
+
+		JSONArray arr = (JSONArray)obj;
+		for(Object o:arr)
+		{
+			JSONObject j = (JSONObject)o;
+			refs.add(new CardFace(j));
+		}
+		return refs;
+	}
 
 	/**
 	 * Returns a list of CardReference objects referencing all parts of a "special" 
@@ -161,6 +234,18 @@ public class Card {
 	 */
 	public String getLegality(String format) {
 		return legalities.get(format.toLowerCase());
+	}
+	
+	/**
+	 * Returns the image of this card in the given format. 
+	 * @param format the format to check. Case insensitive.
+	 */
+	public String getImageURI(String format) {
+		if(imageURIs==null)
+		{
+			return null;
+		}
+		return imageURIs.get(format.toLowerCase());
 	}
 
 	/**
@@ -232,7 +317,7 @@ public class Card {
 	/**
 	 * Returns true if this card is on the reserved list, and false otherwise.
 	 */
-	public boolean isReserved() {
+	public Boolean isReserved() {
 		return reserved;
 	}
 
@@ -282,7 +367,7 @@ public class Card {
 	 * Returns true if this card has multiple parts, and false otherwise.
 	 * The other parts are referenced in the list returned by getPartReferences().
 	 */
-	public boolean isMultiPart() {
+	public Boolean isMultiPart() {
 		return multiPart;
 	}
 
@@ -297,7 +382,7 @@ public class Card {
 	 * Returns true if this printing of the card is only available on MTGO, and
 	 * false otherwise.
 	 */
-	public boolean isDigitalOnly() {
+	public Boolean isDigitalOnly() {
 		return digitalOnly;
 	}
 
@@ -333,7 +418,7 @@ public class Card {
 	 * Returns true if this card is "Time Shifted" from the past, and
 	 * false otherwise.
 	 */
-	public boolean isTimeShifted() {
+	public Boolean isTimeShifted() {
 		return timeShifted;
 	}
 
@@ -341,7 +426,7 @@ public class Card {
 	 * Returns true if this card is "Color Shifted" from another card, and
 	 * false otherwise.
 	 */
-	public boolean isColorShifted() {
+	public Boolean isColorShifted() {
 		return colorShifted;
 	}
 
@@ -349,8 +434,16 @@ public class Card {
 	 * Returns true if this card is "Future Shifted" from the future (spooky),
 	 * and false otherwise.
 	 */
-	public boolean isFutureShifted() {
+	public Boolean isFutureShifted() {
 		return futureShifted;
+	}
+	
+	/**
+	 * Returns true if this card has multiple faces and false otherwise.
+	 */
+	public boolean isMultifaced()
+	{
+		return multifaced;
 	}
 
 	/**
@@ -424,31 +517,45 @@ public class Card {
 	}
 
 	/**
-	 * @return the legalities
+	 * @return the legality set for this card
 	 */
 	public HashMap<String, String> getLegalities() {
 		return legalities;
 	}
+	
+	/**
+	 * @return the set of image uris for this card
+	 */
+	public HashMap<String, String> getImageURIs() {
+		return imageURIs;
+	}
 
 	/**
-	 * @return the allParts
+	 * @return All parts of this card
 	 */
 	public ArrayList<CardReference> getAllParts() {
 		return allParts;
 	}
 
 	/**
-	 * @return the power
+	 * @return This card's power
 	 */
 	public String getPower() {
 		return power;
 	}
 
 	/**
-	 * @return the toughness
+	 * @return This card's toughness
 	 */
 	public String getToughness() {
 		return toughness;
+	}
+
+	/**
+	 * @return This card's loyalty
+	 */
+	public String getLoyalty() {
+		return loyalty;
 	}
 
 

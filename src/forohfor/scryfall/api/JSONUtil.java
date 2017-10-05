@@ -1,4 +1,6 @@
 package forohfor.scryfall.api;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.json.simple.JSONArray;
@@ -90,5 +92,22 @@ public class JSONUtil {
 			i++;
 		}
 		return arr;
+	}
+	
+	public static Date getIsoDateData(JSONObject data, String key)
+	{
+		String date = getStringData(data,key);
+		if(date==null)
+		{
+			return null;
+		}
+		String[] isoSplit = date.split("-");
+		Calendar c = Calendar.getInstance();
+		c.set(
+				Integer.parseInt(isoSplit[0]), 
+				Integer.parseInt(isoSplit[1]), 
+				Integer.parseInt(isoSplit[2])
+		);
+		return c.getTime();
 	}
 }
