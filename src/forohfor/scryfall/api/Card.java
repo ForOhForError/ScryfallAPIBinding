@@ -81,9 +81,6 @@ public class Card {
 		artist = JSONUtil.getStringData(cardData,"artist");
 		frame = JSONUtil.getStringData(cardData,"frame");
 		border = JSONUtil.getStringData(cardData,"border_color");
-		timeShifted = JSONUtil.getBoolData(cardData, "timeshifted").booleanValue();
-		colorShifted = JSONUtil.getBoolData(cardData, "colorshifted").booleanValue();
-		futureShifted = JSONUtil.getBoolData(cardData, "futureshifted").booleanValue();
 		power = JSONUtil.getStringData(cardData,"power");
 		toughness = JSONUtil.getStringData(cardData,"toughness");
 		loyalty = JSONUtil.getStringData(cardData,"loyalty");
