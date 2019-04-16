@@ -107,6 +107,4 @@ public class Set {
 	public String toString() {
 		return name+" ("+code+")";
 	}
-	
-	
 }
