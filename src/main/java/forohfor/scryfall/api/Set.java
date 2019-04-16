@@ -19,6 +19,7 @@ public class Set {
 	private Date releasedAt;
 	private String blockCode;
 	private int cardCount;
+        private String setIconURI;
 	
 	
 	/**
@@ -35,6 +36,7 @@ public class Set {
 		blockCode = JSONUtil.getStringData(setData,"block_code");
 		cardCount = JSONUtil.getIntData(setData,"card_count");
 		releasedAt = JSONUtil.getIsoDateData(setData,"released_at");
+                setIconURI = JSONUtil.getStringData(setData, "icon_svg_uri");
 	}
 
 	/**
@@ -107,4 +109,12 @@ public class Set {
 	public String toString() {
 		return name+" ("+code+")";
 	}
+
+        /**
+         * @return the setIconURI
+         */
+        public String getSetIconURI()
+        {
+          return setIconURI;
+        }	
 }
