@@ -1,6 +1,6 @@
 package forohfor.scryfall.api;
 
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -43,6 +43,7 @@ public class CardFace {
 	/**
 	 * Returns the image of this card in the given format. 
 	 * @param format the format to check. Case insensitive.
+         * @return Image URI
 	 */
 	public String getImageURI(String format) {
 		return imageURIs.get(format.toLowerCase());

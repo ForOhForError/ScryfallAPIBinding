@@ -32,7 +32,8 @@ public class MTGCardQuery {
 	 * editions of any card in the input collection.
 	 * @return A list of card objects that match the query. 
 	 */
-	public static ArrayList<Card> toCardList(Collection<String> cardnames, boolean listDuplicates)
+	public static ArrayList<Card> toCardList(Collection<String> cardnames, 
+                boolean listDuplicates)
 	{
 		StringBuilder query = new StringBuilder("");
 		
@@ -40,10 +41,10 @@ public class MTGCardQuery {
 		{
 			query.append("++");
 		}
-		for(String cardname:cardnames)
-		{
-			query.append("!\""+cardname+"\" "+" or ");
-		}
+                cardnames.forEach((cardname) ->
+                {
+                  query.append("!\"").append(cardname).append("\"  or ");
+                });
 		query.append("!\" \"");
 		
 		return search(query.toString());
@@ -59,26 +60,22 @@ public class MTGCardQuery {
 			URL url = new URL("https://api.scryfall.com/sets");
 			URLConnection conn = url.openConnection();
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					conn.getInputStream(), "UTF-8"));
-
-
-			String json = "";
-			String line = "";
-			while(line != null)
-			{
-				json+=line;
-				line = in.readLine();
-			}
-
-			JSONObject root = null;
-			try {
-				root = (JSONObject)MTGCardQuery.JSON_PARSER.parse(json);
-			} catch (ParseException e) {
-			}
-
-			in.close();
-
+                        JSONObject root;
+			try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                                conn.getInputStream(), "UTF-8"))) {
+                          String json = "";
+                          String line = "";
+                          while(line != null)
+                          {
+                            json+=line;
+                            line = in.readLine();
+                          }
+				root = null;
+                                try {
+                                  root = (JSONObject)MTGCardQuery.JSON_PARSER.parse(json);
+                                } catch (ParseException e) {
+                                }
+                         if(root!=null){
 			JSONArray sets = (JSONArray)root.get("data");
 
 			for (int i = 0; i < sets.size(); i++)
@@ -86,6 +83,8 @@ public class MTGCardQuery {
 				JSONObject setData = ((JSONObject)sets.get(i));
 				s.add(new Set(setData));
 			}
+                         }
+                    }
 		}catch(IOException e){
 
 		}
@@ -114,37 +113,41 @@ public class MTGCardQuery {
 	 * Returns a single card object representing the card with the given ID
 	 * @param id The URI to pull data fromScryfall ID of the card
 	 * @return A single card object representing the card with the given ID
+         * @throws java.io.IOException
 	 */
 	public static Card getCardByScryfallId(String id) throws IOException
 	{
-		URL url = new URL("https://api.scryfall.com/cards/"+id);
-		URLConnection conn = url.openConnection();
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				conn.getInputStream(), "UTF-8"));
+              URL url = new URL("https://api.scryfall.com/cards/" + id);
+              URLConnection conn = url.openConnection();
+              JSONObject root;
+              try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                      conn.getInputStream(), "UTF-8")))
+              {
+                String json = "";
+                String line = "";
+                while (line != null)
+                {
+                  json += line;
+                  line = in.readLine();
+                }
+                root = null;
+                try
+                {
+                  root = (JSONObject) MTGCardQuery.JSON_PARSER.parse(json);
+                }
+                catch (ParseException e)
+                {
+                }
 
-		String json = "";
-		String line = "";
-		while(line != null)
-		{
-			json+=line;
-			line = in.readLine();
-		}
-
-		JSONObject root = null;
-		try {
-			root = (JSONObject)MTGCardQuery.JSON_PARSER.parse(json);
-		} catch (ParseException e) {
-		}
-
-		in.close();
-
-		return new Card(root);
+                return new Card(root);
+                }
 	}
 	
 	/**
 	 * Returns a single card object from the given URI
 	 * @param uri The URI to pull data from
 	 * @return A single card object from the uri
+         * @throws java.io.IOException
 	 */
 	public static Card getCardFromURI(String uri) throws IOException
 	{
@@ -154,26 +157,24 @@ public class MTGCardQuery {
 		}catch(IOException e){}
 		URL url = new URL(escapedQuery);
 		URLConnection conn = url.openConnection();
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				conn.getInputStream(), "UTF-8"));
-
-		String json = "";
-		String line = "";
-		while(line != null)
-		{
-			json+=line;
-			line = in.readLine();
-		}
-
-		JSONObject root = null;
-		try {
-			root = (JSONObject)MTGCardQuery.JSON_PARSER.parse(json);
-		} catch (ParseException e) {
-		}
-
-		in.close();
+                JSONObject root;
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                        conn.getInputStream(), "UTF-8"))) {
+                  String json = "";
+                  String line = "";
+                  while(line != null)
+                  {
+                    json+=line;
+                    line = in.readLine();
+                  }
+			root = null;
+                        try {
+                          root = (JSONObject)MTGCardQuery.JSON_PARSER.parse(json);
+                        } catch (ParseException e) {
+                        }
 
 		return new Card(root);
+                }
 	}
 
 	/**
@@ -183,47 +184,45 @@ public class MTGCardQuery {
 	 */
 	public static ArrayList<Card> getCardsFromURI(String uri)
 	{
-		ArrayList<Card> cards = new ArrayList<Card>();
+		ArrayList<Card> cards = new ArrayList<>();
 		try{
 			URL url = new URL(uri);
 			URLConnection conn = url.openConnection();
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					conn.getInputStream(), "UTF-8"));
+                        JSONObject root;
+			try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                                conn.getInputStream(), "UTF-8"))) {
+                          String json = "";
+                          String line = "";
+                          while(line != null)
+                          {
+                            json+=line;
+                            line = in.readLine();
+                          }
+				root = null;
+                                try {
+                                  root = (JSONObject)MTGCardQuery.JSON_PARSER.parse(json);
+                                } catch (ParseException e) {
+                                }
+                          if(root !=null){
+                            JSONArray jsonCards = (JSONArray)root.get("data");
 
+                            for (int i = 0; i < jsonCards.size(); i++)
+                            {
+                                    JSONObject cardData = ((JSONObject)jsonCards.get(i));
+                                    cards.add(new Card(cardData));
+                            }
 
-			String json = "";
-			String line = "";
-			while(line != null)
-			{
-				json+=line;
-				line = in.readLine();
-			}
-
-			JSONObject root = null;
-			try {
-				root = (JSONObject)MTGCardQuery.JSON_PARSER.parse(json);
-			} catch (ParseException e) {
-			}
-
-			in.close();
-
-			JSONArray jsonCards = (JSONArray)root.get("data");
-
-			for (int i = 0; i < jsonCards.size(); i++)
-			{
-				JSONObject cardData = ((JSONObject)jsonCards.get(i));
-				cards.add(new Card(cardData));
-			}
-
-			if(root.containsKey("has_more") && ((Boolean)root.get("has_more")).booleanValue()){
-				String next = (String)root.get("next_page");
-				try {
-					//Requested wait time between queries
-					Thread.sleep(50);
-				} catch (InterruptedException e) { }
-				cards.addAll(getCardsFromURI(next));
-			}
+                            if(root.containsKey("has_more") && ((Boolean)root.get("has_more"))){
+                                    String next = (String)root.get("next_page");
+                                    try {
+                                            //Requested wait time between queries
+                                            Thread.sleep(50);
+                                    } catch (InterruptedException e) { }
+                                    cards.addAll(getCardsFromURI(next));
+                            }
+                          }
+                        }
 		}catch(IOException e){
 
 		}
