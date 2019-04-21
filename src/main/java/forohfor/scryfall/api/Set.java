@@ -20,8 +20,11 @@ public class Set {
 	private String blockCode;
 	private int cardCount;
         private String setIconURI;
-	
-	
+
+        public Set()
+        {
+        }
+        
 	/**
 	 * Builds a Set object from JSON data.
 	 * @param setData The JSON object representing the set.

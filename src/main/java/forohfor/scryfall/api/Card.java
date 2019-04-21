@@ -1,5 +1,5 @@
 package forohfor.scryfall.api;
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -55,6 +55,10 @@ public class Card {
 	private ArrayList<CardFace> cardFaces;
 	private boolean multifaced = false;
 
+        public Card()
+        {
+        }
+
 	/**
 	 * Constructs a Card object from a JSON object
 	 * @param cardData
@@ -68,7 +72,7 @@ public class Card {
 		colors = JSONUtil.getStringArrayData(cardData,"colors");
 		colorIdentity = JSONUtil.getStringArrayData(cardData,"color_identity");
 		layout = JSONUtil.getStringData(cardData,"layout");
-		reserved = JSONUtil.getBoolData(cardData, "reserved").booleanValue();
+		reserved = JSONUtil.getBoolData(cardData, "reserved");
 		scryfallUUID = JSONUtil.getStringData(cardData,"id");
 		multiverseID = JSONUtil.getIntData(cardData,"multiverse_id");
 		mtgoID = JSONUtil.getIntData(cardData,"mtgo_id");
@@ -76,7 +80,7 @@ public class Card {
 		setName = JSONUtil.getStringData(cardData,"set_name");
 		collectorNumber = JSONUtil.getStringData(cardData,"collector_number");
 		rarity = JSONUtil.getStringData(cardData,"rarity");
-		digitalOnly = JSONUtil.getBoolData(cardData, "digital").booleanValue();
+		digitalOnly = JSONUtil.getBoolData(cardData, "digital");
 		flavorText = JSONUtil.getStringData(cardData,"flavor_text");
 		artist = JSONUtil.getStringData(cardData,"artist");
 		frame = JSONUtil.getStringData(cardData,"frame");
@@ -168,6 +172,7 @@ public class Card {
 	
 	/**
 	 * Returns all faces of this card, if multifaced, and null otherwise.
+         * @return Card faces.
 	 */
 	public ArrayList<CardFace> getFaces()
 	{
@@ -184,13 +189,14 @@ public class Card {
 			return null;
 		}
 
-		ArrayList<CardReference> refs = new ArrayList<CardReference>();
+		ArrayList<CardReference> refs = new ArrayList<>();
 
 		JSONArray arr = (JSONArray)obj;
 		for(Object o:arr)
 		{
 			JSONObject j = (JSONObject)o;
-			refs.add(new CardReference((String)j.get("name"),(String)j.get("uri"),(String)j.get("id")));
+			refs.add(new CardReference((String)j.get("name"),
+                                (String)j.get("uri"),(String)j.get("id")));
 		}
 		return refs;
 	}
@@ -218,16 +224,17 @@ public class Card {
 
 	/**
 	 * Returns a list of CardReference objects referencing all parts of a "special" 
-	 * multipart card. This will include a reference to this card.
-	 * Will be null if isMultiPart() == false.
+	 * multipart card.This will include a reference to this card. Will be null if isMultiPart() == false.
+         * @return Card references
 	 */
 	public ArrayList<CardReference> getPartReferences(){
-		return new ArrayList<CardReference>(allParts);
+		return new ArrayList<>(allParts);
 	}
 
 	/**
 	 * Returns the legality of this card in the given format. 
 	 * @param format the format to check. Case insensitive.
+         * @return Legality
 	 */
 	public String getLegality(String format) {
 		return legalities.get(format.toLowerCase());
@@ -481,6 +488,7 @@ public class Card {
 	/** 
 	 * Hashcode method; works off of name and set code. Auto-generated.
 	 */
+        @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -492,6 +500,7 @@ public class Card {
 	/** 
 	 * Equals method; checks for name and set code equality. Auto-generated.
 	 */
+        @Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -554,7 +563,4 @@ public class Card {
 	public String getLoyalty() {
 		return loyalty;
 	}
-
-
-
 }

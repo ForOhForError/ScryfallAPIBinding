@@ -10,6 +10,9 @@ import java.io.IOException;
 public class CardReference {
 	/**
 	 * Constructs a new card with the given name, API URI, and scryfall id.
+         * @param cardName Card name
+         * @param cardUri Card URI
+         * @param scryfallUUID Scryfall UUID
 	 */
 	public CardReference(String cardName, String cardUri, String scryfallUUID) {
 		super();
@@ -25,6 +28,7 @@ public class CardReference {
 	
 	/**
 	 * Returns the name of the card this object references.
+         * @return Name
 	 */
 	public String getCardName() {
 		return cardName;
@@ -32,14 +36,16 @@ public class CardReference {
 	
 	/**
 	 * Returns the API URI of the card this object references.
+         * @return URI
 	 */
 	public String getCardUri() {
 		return cardUri;
 	}
 	
 	/**
-	 * Returns the card this object references. This is created by querying the
-	 * API when first called on this object. If there is no connection, will return null.
+	 * Returns the card this object references.This is created by querying the
+         * API when first called on this object. If there is no connection, will return null.
+         * @return Card.
 	 */
 	public Card getCard() {
 		if(card == null){
@@ -56,11 +62,10 @@ public class CardReference {
 	}
 
 	/**
-	 * Returns scryfall's internal ID for the card this object references.
+	 * Returns Scryfall's internal ID for the card this object references.
+         * @return UUID
 	 */
 	public String getScryfallUUID() {
 		return scryfallUUID;
 	}
-	
-	
 }

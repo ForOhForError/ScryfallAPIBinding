@@ -53,7 +53,7 @@ public class JSONUtil {
 			return null;
 		}
 		
-		HashMap<String,String> map = new HashMap<String,String>();
+		HashMap<String,String> map = new HashMap<>();
 		
 		JSONObject o = (JSONObject)obj;
 		for(Object k:o.keySet())

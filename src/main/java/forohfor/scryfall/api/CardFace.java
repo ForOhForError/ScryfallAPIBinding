@@ -25,6 +25,10 @@ public class CardFace {
 	private String loyalty;
 	private String flavorText;
 	private HashMap<String, String> imageURIs;
+
+        public CardFace()
+        {
+        }
 	
 	public CardFace(JSONObject cardData)
 	{
