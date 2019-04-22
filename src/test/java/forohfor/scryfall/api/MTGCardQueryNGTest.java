@@ -3,7 +3,6 @@ package forohfor.scryfall.api;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,10 +44,6 @@ public class MTGCardQueryNGTest
     ArrayList<Set> sets = MTGCardQuery.getSets();
     assertNotNull(sets);
     assertFalse(sets.isEmpty());
-    sets.forEach(set ->
-    {
-      System.out.println(set.getName());
-    });
   }
 
   /**
@@ -58,12 +53,10 @@ public class MTGCardQueryNGTest
   public void testSearch()
   {
     System.out.println("search");
-    String query = "";
-    ArrayList expResult = null;
-    ArrayList result = MTGCardQuery.search(query);
-    assertEquals(result, expResult);
-    // TODO review the generated test code and remove the default call to fail.
-    fail("The test case is a prototype.");
+    String query = "e:mmq";
+    ArrayList<Card> result = MTGCardQuery.search(query);
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
   }
 
   /**
@@ -137,9 +130,5 @@ public class MTGCardQueryNGTest
     ArrayList<Card> cards = MTGCardQuery.getCardsFromSet(set);
     assertNotNull(cards);
     assertFalse(cards.isEmpty());
-    cards.forEach(card ->
-    {
-      System.out.println(card.getName());
-    });
   }
 }
