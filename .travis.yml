@@ -1,0 +1,10 @@
+language: java
+sudo: required
+
+group: edge
+    
+dist: trusty
+jdk:
+- oraclejdk8
+- openjdk8
+- openjdk11
