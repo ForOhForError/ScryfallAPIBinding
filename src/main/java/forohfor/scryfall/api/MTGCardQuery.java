@@ -183,7 +183,7 @@ public class MTGCardQuery
     ArrayList<Card> cards = new ArrayList<>();
     try
     {
-      String json = RT.exchange(new URI(uri), HttpMethod.GET, HttpEntity.EMPTY, 
+      String json = RT.exchange(new URI(uri), HttpMethod.GET, HttpEntity.EMPTY,
               String.class).getBody();
 
       JSONObject root;
@@ -224,6 +224,15 @@ public class MTGCardQuery
     }
     catch (RestClientException | URISyntaxException e)
     {
+      if (e instanceof RestClientException)
+      {
+        RestClientException re = (RestClientException) e;
+        Throwable cause = re.getCause();
+        if (cause != null)
+        {
+          LOG.log(Level.SEVERE, cause.getLocalizedMessage(), cause);
+        }
+      }
       LOG.log(Level.SEVERE, e.getLocalizedMessage(), e);
     }
 
