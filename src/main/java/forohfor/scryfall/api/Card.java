@@ -62,7 +62,7 @@ public class Card {
 	public Card(JSONObject cardData) {
 		name = JSONUtil.getStringData(cardData,"name");
 		manaCost = JSONUtil.getStringData(cardData,"mana_cost");
-		String cmcstr = JSONUtil.getStringData(cardData, "converted_mana_cost");
+		String cmcstr = JSONUtil.getStringData(cardData, "cmc");
 		typeLine = JSONUtil.getStringData(cardData,"type_line");
 		oracleText = JSONUtil.getStringData(cardData,"oracle_text");
 		colors = JSONUtil.getStringArrayData(cardData,"colors");

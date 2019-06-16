@@ -34,19 +34,21 @@ public class MTGCardQuery {
 	 */
 	public static ArrayList<Card> toCardList(Collection<String> cardnames, boolean listDuplicates)
 	{
-		StringBuilder query = new StringBuilder("");
-		
-		if(listDuplicates)
-		{
-			query.append("++");
-		}
+		ArrayList<Card> result = new ArrayList<Card>();
 		for(String cardname:cardnames)
 		{
-			query.append("!\""+cardname+"\" "+" or ");
+			String query;
+			if(listDuplicates)
+			{
+				query ="++!\""+cardname+"\"";
+			}
+			else
+			{
+				query ="!\""+cardname+"\"";
+			}
+			result.addAll(search(query));
 		}
-		query.append("!\" \"");
-		
-		return search(query.toString());
+		return result;
 	}
 	
 	/**

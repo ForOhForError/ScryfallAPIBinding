@@ -18,10 +18,11 @@ public class Set {
 	private Boolean hasFoils;
 	private Date releasedAt;
 	private String blockCode;
+	private String blockName;
 	private int cardCount;
-        private String setIconURI;
-	
-	
+	private String setIconURI;
+
+
 	/**
 	 * Builds a Set object from JSON data.
 	 * @param setData The JSON object representing the set.
@@ -34,9 +35,10 @@ public class Set {
 		digitalOnly = JSONUtil.getBoolData(setData,"digital");
 		hasFoils = JSONUtil.getBoolData(setData,"foil");
 		blockCode = JSONUtil.getStringData(setData,"block_code");
+		blockName = JSONUtil.getStringData(setData,"block");
 		cardCount = JSONUtil.getIntData(setData,"card_count");
 		releasedAt = JSONUtil.getIsoDateData(setData,"released_at");
-                setIconURI = JSONUtil.getStringData(setData, "icon_svg_uri");
+		setIconURI = JSONUtil.getStringData(setData, "icon_svg_uri");
 	}
 
 	/**
@@ -94,6 +96,13 @@ public class Set {
 	public String getBlockCode() {
 		return blockCode;
 	}
+	
+	/**
+	 * @return the block name
+	 */
+	public String getBlockName() {
+		return blockName;
+	}
 
 	/**
 	 * @return the cardCount
@@ -110,11 +119,11 @@ public class Set {
 		return name+" ("+code+")";
 	}
 
-        /**
-         * @return the setIconURI
-         */
-        public String getSetIconURI()
-        {
-          return setIconURI;
-        }	
+	/**
+	 * @return the setIconURI
+	 */
+	public String getSetIconURI()
+	{
+		return setIconURI;
+	}	
 }
