@@ -28,7 +28,7 @@ public class Card {
 	private HashMap<String, String> legalities;
 	private Boolean reserved;
 	private String scryfallUUID;
-	private Integer multiverseID;
+	private ArrayList<Long> multiverseIDs;
 	private Integer mtgoID;
 	private String setCode;
 	private String setName;
@@ -70,7 +70,7 @@ public class Card {
 		layout = JSONUtil.getStringData(cardData,"layout");
 		reserved = JSONUtil.getBoolData(cardData, "reserved").booleanValue();
 		scryfallUUID = JSONUtil.getStringData(cardData,"id");
-		multiverseID = JSONUtil.getIntData(cardData,"multiverse_id");
+		multiverseIDs = new ArrayList<Long>();
 		mtgoID = JSONUtil.getIntData(cardData,"mtgo_id");
 		setCode = JSONUtil.getStringData(cardData,"set");
 		setName = JSONUtil.getStringData(cardData,"set_name");
@@ -135,6 +135,21 @@ public class Card {
 		{
 			cardFaces = getAllFaces(cardData,"card_faces");
 			multifaced = true;
+		}
+		if(cardData.containsKey("multiverse_ids"))
+		{
+			Object obj = cardData.get("multiverse_ids");
+			if(obj!=null){
+				JSONArray arr = (JSONArray)obj;
+				for(Object o:arr)
+				{
+					if(o instanceof Long)
+					{
+						Long l = (Long)o;
+						multiverseIDs.add(l);
+					}
+				}
+			}
 		}
 
 	}
@@ -326,10 +341,10 @@ public class Card {
 	}
 
 	/**
-	 * Returns this card's multiverse id.
+	 * Returns this card's multiverse ids.
 	 */
-	public Integer getMultiverseID() {
-		return multiverseID;
+	public ArrayList<Long> getMultiverseIDs() {
+		return multiverseIDs;
 	}
 
 	/**
