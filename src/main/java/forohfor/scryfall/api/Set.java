@@ -10,6 +10,7 @@ import org.json.simple.JSONObject;
  */
 
 public class Set {
+	private String id;
 	private String code;
 	private String name;
 	private String searchUri;
@@ -21,6 +22,7 @@ public class Set {
 	private String blockName;
 	private int cardCount;
 	private String setIconURI;
+	private String parentSetCode;
 
 
 	/**
@@ -28,6 +30,7 @@ public class Set {
 	 * @param setData The JSON object representing the set.
 	 */
 	public Set(JSONObject setData) {
+		id = JSONUtil.getStringData(setData,"id");
 		code = JSONUtil.getStringData(setData,"code");
 		name = JSONUtil.getStringData(setData,"name");
 		searchUri = JSONUtil.getStringData(setData,"search_uri");
@@ -39,6 +42,7 @@ public class Set {
 		cardCount = JSONUtil.getIntData(setData,"card_count");
 		releasedAt = JSONUtil.getIsoDateData(setData,"released_at");
 		setIconURI = JSONUtil.getStringData(setData, "icon_svg_uri");
+		parentSetCode = JSONUtil.getStringData(setData, "parent_set_code");
 	}
 
 	/**
@@ -120,10 +124,24 @@ public class Set {
 	}
 
 	/**
-	 * @return the setIconURI
+	 * @return the set icon's URI
 	 */
 	public String getSetIconURI()
 	{
 		return setIconURI;
+	}
+
+	/**
+	 * @return the UUID of this set
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @return the code of this set's parent set
+	 */
+	public String getParentSetCode() {
+		return parentSetCode;
 	}	
 }
