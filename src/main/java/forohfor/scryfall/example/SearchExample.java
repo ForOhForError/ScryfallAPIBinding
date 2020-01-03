@@ -39,7 +39,7 @@ public class SearchExample {
 			
 			if (cards.size() == 1) {
 				Card c = cards.get(0);
-				URL url = new URL(c.getImageURI());
+				URL url = new URL(c.getImageURI("normal"));
 				BufferedImage img = ImageIO.read(url);
 				ImageIcon icon = new ImageIcon(img);
 				JFrame j = new JFrame();

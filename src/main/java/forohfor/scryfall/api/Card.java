@@ -47,7 +47,6 @@ public class Card {
 	private Double priceUsd;
 	private Double priceTix;
 	private String scryfallUri;
-	private String imageURI;
 	private String power;
 	private String toughness;
 	private String loyalty;
@@ -121,7 +120,6 @@ public class Card {
 		}
 
 		scryfallUri = JSONUtil.getStringData(cardData,"uri");
-		imageURI = JSONUtil.getStringData(cardData,"image_uri");
 		legalities = JSONUtil.getStringMap(cardData,"legalities");
 		imageURIs = JSONUtil.getStringMap(cardData,"image_uris");
 
@@ -155,30 +153,27 @@ public class Card {
 	}
 
 	/**
-	 * @return The preferred image for this card
+	 * @return The image for this card, in the "normal" format
 	 */
-	public BufferedImage getCannonicalImage()
+	public BufferedImage getImage()
+	{
+		return getImage("normal");
+	}
+
+	/**
+	 * @param format - the image format to fetch
+	 * @return The image for this card, in the given format
+	 */
+	public BufferedImage getImage(String format)
 	{
 		try
 		{
-			return ImageIO.read(new URL(getCannonicalImageURI()));
+			return ImageIO.read(new URL(getImageURI(format)));
 		}
 		catch(IOException e)
 		{
 			return null;
 		}
-	}
-	
-	/**
-	 * @return The uri for the preferred image for this card
-	 */
-	public String getCannonicalImageURI()
-	{
-		if(multifaced)
-		{
-			return cardFaces.get(0).getImageURI("png");
-		}
-		return getImageURI("png");
 	}
 	
 	/**
@@ -477,13 +472,6 @@ public class Card {
 	 */
 	public String getScryfallUri() {
 		return scryfallUri;
-	}
-
-	/**
-	 * Returns a URI for scryfall's image of this card.
-	 */
-	public String getImageURI() {
-		return imageURI;
 	}
 
 	/**

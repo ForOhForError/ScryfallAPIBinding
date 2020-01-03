@@ -119,21 +119,22 @@ public class CardFace {
 	}
 	
 	/**
-	 * @return The uri for the preferred image for this card
+	 * @return The image for this card, in the "normal" format
 	 */
-	public String getCannonicalImageURI()
+	public BufferedImage getImage()
 	{
-		return getImageURI("png");
+		return getImage("normal");
 	}
-	
+
 	/**
-	 * @return The preferred image for this card
+	 * @param format - the image format to fetch
+	 * @return The image for this card, in the given format
 	 */
-	public BufferedImage getCannonicalImage()
+	public BufferedImage getImage(String format)
 	{
 		try
 		{
-			return ImageIO.read(new URL(getCannonicalImageURI()));
+			return ImageIO.read(new URL(getImageURI(format)));
 		}
 		catch(IOException e)
 		{
