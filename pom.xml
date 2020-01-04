@@ -14,6 +14,19 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+    <developers>
+        <developer>
+            <name>ForOhForError</name>
+            <email>ForOhForError@gmail.com</email>
+            <organization>ForOhForError</organization>
+            <organizationUrl>https://github.com/ForOhForError/</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/ForOhForError/ScryfallAPIBinding.git</connection>
+        <developerConnection>scm:git:ssh://github.com:ForOhForError/ScryfallAPIBinding.git</developerConnection>
+        <url>http://github.com/ForOhForError/ScryfallAPIBinding/tree/master</url>
+    </scm>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -83,15 +96,15 @@
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.5</version>
                 <executions>
-                  <execution>
-                    <id>sign-artifacts</id>
-                    <phase>verify</phase>
-                    <goals>
-                      <goal>sign</goal>
-                    </goals>
-                  </execution>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
                 </executions>
-              </plugin>
+            </plugin>
         </plugins>
     </build>
 </project>
