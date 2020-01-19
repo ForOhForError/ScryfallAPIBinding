@@ -15,6 +15,10 @@ import org.json.simple.JSONObject;
 public class JSONUtil {
 	public static String getStringData(JSONObject data, String key)
 	{
+		if(data == null)
+		{
+			return null;
+		}
 		Object obj = data.get(key);
 		if(obj==null){
 			return null;
@@ -24,6 +28,10 @@ public class JSONUtil {
 	
 	public static Long getLongData(JSONObject data, String key)
 	{
+		if(data == null)
+		{
+			return null;
+		}
 		Object obj = data.get(key);
 		if(obj==null){
 			return null;
@@ -36,6 +44,10 @@ public class JSONUtil {
 	
 	public static Integer getIntData(JSONObject data, String key)
 	{
+		if(data == null)
+		{
+			return null;
+		}
 		Object obj = data.get(key);
 		if(obj==null){
 			return null;
@@ -45,9 +57,29 @@ public class JSONUtil {
 		}
 		return null;
 	}
+
+	public static Double getDoubleData(JSONObject data, String key)
+	{
+		if(data == null)
+		{
+			return null;
+		}
+		Object obj = data.get(key);
+		if(obj==null){
+			return null;
+		}
+		if(obj instanceof Double){
+			return (Double)obj;
+		}
+		return null;
+	}
 	
 	public static HashMap<String,String> getStringMap(JSONObject data, String key)
 	{
+		if(data == null)
+		{
+			return null;
+		}
 		Object obj = data.get(key);
 		if(obj==null){
 			return null;
@@ -65,6 +97,10 @@ public class JSONUtil {
 	
 	public static Boolean getBoolData(JSONObject data, String key)
 	{
+		if(data == null)
+		{
+			return null;
+		}
 		Object obj = data.get(key);
 		if(obj==null){
 			return null;
@@ -77,6 +113,10 @@ public class JSONUtil {
 	
 	public static String[] getStringArrayData(JSONObject data, String key)
 	{
+		if(data == null)
+		{
+			return null;
+		}
 		Object obj = data.get(key);
 		if(obj==null){
 			return null;
@@ -93,9 +133,36 @@ public class JSONUtil {
 		}
 		return arr;
 	}
+
+	public static Integer[] getIntArrayData(JSONObject data, String key)
+	{
+		if(data == null)
+		{
+			return null;
+		}
+		Object obj = data.get(key);
+		if(obj==null){
+			return null;
+		}
+		
+		JSONArray jarr = (JSONArray)obj;
+		
+		Integer[] arr = new Integer[jarr.size()];
+		int i = 0;
+		for(Object o:jarr)
+		{
+			arr[i] = (Integer)o;
+			i++;
+		}
+		return arr;
+	}
 	
 	public static Date getIsoDateData(JSONObject data, String key)
 	{
+		if(data == null)
+		{
+			return null;
+		}
 		String date = getStringData(data,key);
 		if(date==null)
 		{
@@ -109,5 +176,18 @@ public class JSONUtil {
 				Integer.parseInt(isoSplit[2])
 		);
 		return c.getTime();
+	}
+
+	public static JSONObject getObject(JSONObject data, String key)
+	{
+		if(data == null)
+		{
+			return null;
+		}
+		Object obj = data.get(key);
+		if(obj instanceof JSONObject){
+			return (JSONObject)obj;
+		}
+		return null;
 	}
 }
