@@ -3,7 +3,10 @@ package forohfor.scryfall.api;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
@@ -15,107 +18,11 @@ import org.json.simple.JSONObject;
  */
 
 public class CardFace {
-	private String name;
-	private String typeLine;
-	private String oracleText;
-	private String manaCost;
-	private String[] colors;
-	private String power;
-	private String toughness;
-	private String loyalty;
-	private String flavorText;
-	private HashMap<String, String> imageURIs;
+	private JSONObject json;
 	
 	public CardFace(JSONObject cardData)
 	{
-		name = JSONUtil.getStringData(cardData,"name");
-		manaCost = JSONUtil.getStringData(cardData,"mana_cost");
-		typeLine = JSONUtil.getStringData(cardData,"type_line");
-		oracleText = JSONUtil.getStringData(cardData,"oracle_text");
-		colors = JSONUtil.getStringArrayData(cardData,"colors");
-		flavorText = JSONUtil.getStringData(cardData,"flavor_text");
-		power = JSONUtil.getStringData(cardData,"power");
-		toughness = JSONUtil.getStringData(cardData,"toughness");
-		loyalty = JSONUtil.getStringData(cardData,"loyalty");
-		imageURIs = JSONUtil.getStringMap(cardData,"image_uris");
-	}
-	
-	/**
-	 * Returns the image of this card in the given format. 
-	 * @param format the format to check. Case insensitive.
-	 */
-	public String getImageURI(String format) {
-		return imageURIs.get(format.toLowerCase());
-	}
-	
-	/**
-	 * @return This card's name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @return This card's type line
-	 */
-	public String getTypeLine() {
-		return typeLine;
-	}
-
-	/**
-	 * @return This card's oracle text
-	 */
-	public String getOracleText() {
-		return oracleText;
-	}
-
-	/**
-	 * @return This card's mana cost
-	 */
-	public String getManaCost() {
-		return manaCost;
-	}
-
-	/**
-	 * @return This card's colors
-	 */
-	public String[] getColors() {
-		return colors;
-	}
-
-	/**
-	 * @return This card's power
-	 */
-	public String getPower() {
-		return power;
-	}
-
-	/**
-	 * @return This card's toughness
-	 */
-	public String getToughness() {
-		return toughness;
-	}
-
-	/**
-	 * @return This card's loyalty
-	 */
-	public String getLoyalty() {
-		return loyalty;
-	}
-
-	/**
-	 * @return This card's flavorText
-	 */
-	public String getFlavorText() {
-		return flavorText;
-	}
-
-	/**
-	 * @return This card's set of imageURIs
-	 */
-	public HashMap<String, String> getImageURIs() {
-		return imageURIs;
+		json = new JSONObject(cardData);
 	}
 	
 	/**
@@ -140,5 +47,148 @@ public class CardFace {
 		{
 			return null;
 		}
+	}
+
+	/**
+	 * @return The name of the illustrator of this face. 
+	 * Newly spoiled cards may not have this field yet. 
+	 */
+	public String getArtist() {
+		return JSONUtil.getStringData(json, "artist");
+	}
+
+	/**
+	 * @return The colors in this face’s color indicator, if any.
+	 */
+	public List<String> getColorIndicator()
+	{
+		return Arrays.asList(JSONUtil.getStringArrayData(json, "color_indicator"));
+	}
+
+	/**
+	 * @return This face’s colors, if the game defines colors for the individual face of this card. 
+	 */
+	public List<String> getColors()
+	{
+		return Arrays.asList(JSONUtil.getStringArrayData(json, "colors"));
+	}
+
+	/**
+	 * @return The flavor text, if any. 
+	 */
+	public String getFlavorText() {
+		return JSONUtil.getStringData(json, "flavor_text");
+	}
+
+	/**
+	 * @return A unique identifier for the face artwork that remains consistent across reprints. 
+	 * Newly spoiled cards may not have this field yet. 
+	 */
+	public UUID getIllustrationUUID()
+	{
+		return UUID.fromString(JSONUtil.getStringData(json, "illustration_id"));
+	}
+
+		/**
+	 * @return A map listing available imagery for this face. 
+	 * See Scryfall's Card Imagery article for more information. 
+	 */
+	@SuppressWarnings("unchecked")
+	public HashMap<String, String> getImageURIs() {
+		return new HashMap<String, String>(JSONUtil.getObject(json, "image_uris"));
+	}
+
+	/**
+	 * Returns the image URI of this face in the given format. 
+	 * @param format the format to get the uri for. Case insensitive.
+	 */
+	public String getImageURI(String format) {
+		return JSONUtil.getStringData(
+			JSONUtil.getObject(json,"image_uris"),
+			format.toLowerCase()
+		);
+	}
+
+	/**
+	 * @return This face's loyalty if any. Note that some cards have loyalties that are not numeric, such as X. 
+	 */
+	public String getLoyalty() {
+		return JSONUtil.getStringData(json, "loyalty");
+	}
+
+	/**
+	 * @return The mana cost for this face. 
+	 * This value will be any empty string "" if the cost is absent.
+	 * Remember that per the game rules, a missing mana cost and a mana cost
+	 * of {0} are different values.
+	 */
+	public String getManaCost() {
+		return JSONUtil.getStringData(json, "mana_cost");
+	}
+
+	/**
+	 * @return The name of this particular face.
+	 */
+	public String getName() {
+		return JSONUtil.getStringData(json, "name");
+	}
+
+	/**
+	 * @return The Oracle text for this face, if any. 
+	 */
+	public String getOracleText() {
+		return JSONUtil.getStringData(json, "oracle_text");
+	}
+
+	/**
+	 * @return This face's power, if any. 
+	 * Note that some cards have powers that are not numeric, such as *. 
+	 */
+	public String getPower() {
+		return JSONUtil.getStringData(json, "power");
+	}
+
+	/**
+	 * @return The localized name printed on this face, if any. 
+	 */
+	public String getPrintedName() {
+		return JSONUtil.getStringData(json, "printed_name");
+	}
+
+	/**
+	 * @return The localized text printed on this face, if any.
+	 */
+	public String getPrintedText() {
+		return JSONUtil.getStringData(json, "printed_text");
+	}
+
+	/**
+	 * @return The localized type line printed on this face, if any. 
+	 */
+	public String getPrintedTypeLine() {
+		return JSONUtil.getStringData(json, "printed_type_line");
+	}
+
+	/**
+	 * @return This face's toughness, if any. 
+	 * Note that some cards have toughnesses that are not numeric, such as *. 
+	 */
+	public String getToughness() {
+		return JSONUtil.getStringData(json, "toughness");
+	}
+
+	/**
+	 * @return The full type line of this face. 
+	 */
+	public String getTypeLine() {
+		return JSONUtil.getStringData(json, "type_line");
+	}
+
+	/**
+	 * @return This card’s watermark, if any.
+	 */
+	public String getWatermark()
+	{
+		return JSONUtil.getStringData(json, "watermark");
 	}
 }

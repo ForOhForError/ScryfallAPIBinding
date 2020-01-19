@@ -1,5 +1,9 @@
 package forohfor.scryfall.api;
+
 import java.io.IOException;
+import java.util.UUID;
+
+import org.json.simple.JSONObject;
 
 /**
  * Represents a reference to a single printing of a card. Used for cards with multiple
@@ -8,33 +12,55 @@ import java.io.IOException;
  */
 
 public class CardReference {
+
+	private JSONObject json;
+	private Card card;
+
 	/**
 	 * Constructs a new card with the given name, API URI, and scryfall id.
 	 */
-	public CardReference(String cardName, String cardUri, String scryfallUUID) {
+	public CardReference(JSONObject object) {
 		super();
-		this.cardName = cardName;
-		this.cardUri = cardUri;
-		this.scryfallUUID = scryfallUUID;
-		this.card = null;
+		json = new JSONObject(object);
 	}
-	private String cardName;
-	private String cardUri;
-	private String scryfallUUID;
-	private Card card;
-	
+
 	/**
-	 * Returns the name of the card this object references.
+	 * @return A unique ID for this card in Scryfall’s database. 
 	 */
-	public String getCardName() {
-		return cardName;
+	public UUID getScryfallUUID()
+	{
+		return UUID.fromString(JSONUtil.getStringData(json, "id"));
 	}
-	
+
 	/**
-	 * Returns the API URI of the card this object references.
+	 * @return A field explaining what role this card plays in this relationship:
+	 * one of token, meld_part, meld_result, or combo_piece. 
 	 */
-	public String getCardUri() {
-		return cardUri;
+	public String getComponent()
+	{
+		return JSONUtil.getStringData(json, "component");
+	}
+
+	/**
+	 * @return The name of this particular related card. 
+	 */
+	public String getName() {
+		return JSONUtil.getStringData(json, "name");
+	}
+
+	/**
+	 * @return The full type line of this card. 
+	 */
+	public String getTypeLine() {
+		return JSONUtil.getStringData(json, "type_line");
+	}
+
+	/**
+	 * @return A URI where you can retrieve a full object describing this card on Scryfall’s API.
+	 */
+	public String getURI()
+	{
+		return JSONUtil.getStringData(json, "uri");
 	}
 	
 	/**
@@ -45,7 +71,7 @@ public class CardReference {
 		if(card == null){
 			try
 			{
-				card = MTGCardQuery.getCardFromURI(cardUri);
+				card = MTGCardQuery.getCardFromURI(getURI());
 			}
 			catch(IOException e)
 			{
@@ -54,13 +80,5 @@ public class CardReference {
 		}
 		return card;
 	}
-
-	/**
-	 * Returns scryfall's internal ID for the card this object references.
-	 */
-	public String getScryfallUUID() {
-		return scryfallUUID;
-	}
-	
 	
 }

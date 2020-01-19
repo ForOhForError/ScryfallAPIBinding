@@ -43,11 +43,11 @@ public class Card {
 
 		if(cardData.containsKey("all_parts"))
 		{
-			allParts = getAllParts(cardData,"all_parts");
+			allParts = getReferences(cardData,"all_parts");
 		}
 		if(cardData.containsKey("card_faces"))
 		{
-			cardFaces = getAllFaces(cardData,"card_faces");
+			cardFaces = getFaces(cardData,"card_faces");
 		}
 	}
 
@@ -76,30 +76,20 @@ public class Card {
 	}
 	
 	/**
-	 * Returns all faces of this card, if multifaced, and null otherwise.
-	 */
-	public ArrayList<CardFace> getFaces()
-	{
-		return cardFaces;
-	}
-	
-	/**
 	 * Utility method for reading each part of multipart cards.
 	 */
-	private static ArrayList<CardReference> getAllParts(JSONObject data, String key)
+	private static ArrayList<CardReference> getReferences(JSONObject data, String key)
 	{
 		Object obj = data.get(key);
-		if(obj==null){
-			return null;
-		}
 
 		ArrayList<CardReference> refs = new ArrayList<CardReference>();
-
-		JSONArray arr = (JSONArray)obj;
-		for(Object o:arr)
-		{
-			JSONObject j = (JSONObject)o;
-			refs.add(new CardReference((String)j.get("name"),(String)j.get("uri"),(String)j.get("id")));
+		if(obj!=null){
+			JSONArray arr = (JSONArray)obj;
+			for(Object o:arr)
+			{
+				JSONObject j = (JSONObject)o;
+				refs.add(new CardReference(j));
+			}
 		}
 		return refs;
 	}
@@ -107,40 +97,30 @@ public class Card {
 	/**
 	 * Utility method for reading each part of multifaced cards.
 	 */
-	private static ArrayList<CardFace> getAllFaces(JSONObject data, String key)
+	private static ArrayList<CardFace> getFaces(JSONObject data, String key)
 	{
 		Object obj = data.get(key);
-		if(obj==null){
-			return null;
-		}
 
 		ArrayList<CardFace> refs = new ArrayList<CardFace>();
-
-		JSONArray arr = (JSONArray)obj;
-		for(Object o:arr)
-		{
-			JSONObject j = (JSONObject)o;
-			refs.add(new CardFace(j));
+		if(obj!=null){
+			JSONArray arr = (JSONArray)obj;
+			for(Object o:arr)
+			{
+				JSONObject j = (JSONObject)o;
+				refs.add(new CardFace(j));
+			}
 		}
 		return refs;
 	}
 
-	/**
-	 * Returns a list of CardReference objects referencing all parts of a "special" 
-	 * multipart card. This will include a reference to this card.
-	 * Will be null if isMultiPart() == false.
-	 */
-	public ArrayList<CardReference> getPartReferences()
+	public boolean isMultifaced()
 	{
-		return new ArrayList<CardReference>(allParts);
+		return cardFaces.size() > 0;
 	}
 
-	/**
-	 * @return All parts of this card
-	 */
-	public ArrayList<CardReference> getAllParts()
+	public boolean isMultipart()
 	{
-		return allParts;
+		return allParts.size() > 0;
 	}
 
 	/**
@@ -256,8 +236,21 @@ public class Card {
 	 * BEGIN: Gameplay Fields
 	 */
 
-	//TODO: CARD PARTS
-	//TODO: CARD FACES
+	/**
+	 * @return If this card is closely related to other cards, this property will be a list of Card Reference Objects. 
+	 */
+	public ArrayList<CardReference> getAllParts()
+	{
+		return allParts;
+	}
+
+	/**
+	 * @return All faces of this card, if multifaced.
+	 */
+	public List<CardFace> getCardFaces()
+	{
+		return cardFaces;
+	}
 
 	/**
 	 * @return The card’s converted mana cost. Note that some funny cards have fractional mana costs.
