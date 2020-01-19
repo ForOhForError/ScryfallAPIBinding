@@ -24,6 +24,15 @@ public class CardFace {
 	{
 		json = new JSONObject(cardData);
 	}
+
+	/**
+	 * @return The underlying JSON data for this face.
+	 */
+	public JSONObject getJSONData()
+	{
+		return json;
+	}
+
 	
 	/**
 	 * @return The image for this card, in the "normal" format

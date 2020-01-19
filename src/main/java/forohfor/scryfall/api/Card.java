@@ -28,12 +28,6 @@ public class Card {
 	private JSONObject json;
 
 	/**
-	 * BEGIN: EXTRAS
-	 * 
-	 * Extra functionality on top of scryfall's raw API data below.
-	 */
-
-	/**
 	 * Constructs a Card object from a JSON object
 	 * @param cardData
 	 */
@@ -49,6 +43,14 @@ public class Card {
 		{
 			cardFaces = getFaces(cardData,"card_faces");
 		}
+	}
+
+	/**
+	 * @return The underlying JSON data for this card.
+	 */
+	public JSONObject getJSONData()
+	{
+		return json;
 	}
 
 	/**

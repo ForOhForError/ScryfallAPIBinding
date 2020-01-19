@@ -24,6 +24,15 @@ public class Set {
 	}
 
 	/**
+	 * @return The underlying JSON data for this set.
+	 */
+	public JSONObject getJSONData()
+	{
+		return json;
+	}
+
+
+	/**
 	 * @return A UUID for this set on Scryfall that will not change. 
 	 */
 	public UUID getId() 

@@ -25,6 +25,15 @@ public class CardReference {
 	}
 
 	/**
+	 * @return The underlying JSON data for this reference.
+	 */
+	public JSONObject getJSONData()
+	{
+		return json;
+	}
+
+
+	/**
 	 * @return A unique ID for this card in Scryfall’s database. 
 	 */
 	public UUID getScryfallUUID()
