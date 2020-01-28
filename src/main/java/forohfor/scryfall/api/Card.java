@@ -115,14 +115,20 @@ public class Card {
 		return refs;
 	}
 
+	/**
+	 * @return True if this card has card faces
+	 */
 	public boolean isMultifaced()
 	{
-		return cardFaces.size() > 0;
+		return cardFaces != null && cardFaces.size() > 0;
 	}
 
+	/**
+	 * @return True if this card is part of a multi-part collection
+	 */
 	public boolean isMultipart()
 	{
-		return allParts.size() > 0;
+		return allParts != null && allParts.size() > 0;
 	}
 
 	/**
