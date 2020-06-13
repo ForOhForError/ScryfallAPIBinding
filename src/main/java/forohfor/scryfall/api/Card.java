@@ -496,9 +496,8 @@ public class Card {
 	}
 
 	/**
-	 * @return This card’s collector number. 
-	 * Note that collector numbers can contain non-numeric characters, 
-	 * such as letters or ★.
+	 * @return True if you should consider avoiding use of this print downstream. 
+	 * Nullable.
 	 */
 	public Boolean getContentWarning() {
 		return JSONUtil.getBoolData(json, "content_warning");
