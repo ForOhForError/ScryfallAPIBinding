@@ -269,6 +269,14 @@ public class Card {
 	}
 
 	/**
+	 * @return An array of keywords that this card uses, such as 'Flying' and 'Cumulative upkeep'. 
+	 */
+	public List<String> getKeywords()
+	{
+		return Arrays.asList(JSONUtil.getStringArrayData(json, "keywords"));
+	}
+
+	/**
 	 * @return This card’s colors, if the overall card has colors defined by the rules. 
 	 * Otherwise the colors will be on the CardFace objects. 
 	 */
@@ -485,6 +493,15 @@ public class Card {
 	 */
 	public String getCollectorNumber() {
 		return JSONUtil.getStringData(json, "collector_number");
+	}
+
+	/**
+	 * @return This card’s collector number. 
+	 * Note that collector numbers can contain non-numeric characters, 
+	 * such as letters or ★.
+	 */
+	public Boolean getContentWarning() {
+		return JSONUtil.getBoolData(json, "content_warning");
 	}
 
 	/**
